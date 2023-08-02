@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 
 import {FaEdit, FaPenAlt,FaPlus, FaTrash} from "react-icons/fa";
 function App() {
   const[todo,setTodo] = useState("")
   const[todos,setTodos] = useState([])
-  const[toggle,setToggle] =useState(false)
+  const[toggle,setToggle] =useState(true)
   const [updateItem,setUpdateItem] = useState(null)
   const handleChange= (e)=>{
     setTodo(e.target.value)
@@ -12,46 +12,38 @@ function App() {
   }
   
  const addTodos = () => {
-  // Trim the input to remove leading/trailing whitespaces
-  const trimmedTodo = todo.trim();
-  
-  if (trimmedTodo) {
-    const newItem = {
-      id: new Date().getTime().toString(),
-      text: trimmedTodo,
-    };
-
-    setTodos([...todos, newItem]);
+  if(!todo){
+    alert('Please fill todos..')
+  }
+    else if(!toggle && todo){
     
-    setTodo(""); // Clear the input field explicitly
-  }
-  else if(!toggle && todo){
-    setTodos(
-      todos.map((item)=>{
-        if( item.id === updateItem){
-        return  {...item, text:todo}
-      }
-        return item;  
-      }
+      setTodos(
+        todos.map((item)=>{
+          if( item.id === updateItem){
+          return  {...item, text:todo}
+        }
+          return item;  
+        }
+        )
       )
-    )
-    setTodo("")
-    setToggle(false)
+      setTodo("")
+      setToggle(true)
+      alert()
 
-  }
-   else {
-    // Handle the case when the input is empty or contains only whitespace
-    console.error("Todo text cannot be empty.");
-    // Optionally, you can show a message to the user to indicate the error.
-    // You could set an error state and display the error message in the UI.
-  }
+    }
+    else{
+      const newTodo = {id: new Date().getTime().toString(), text: todo}
+      setTodos([...todos,newTodo])
+      setTodo("")
+    }
+   
 };
 
 const updateTodos = (index) =>{
   const editText = [...todos].find(item=> item.id ===index);
   // console.log(editText)
   setTodo(editText.text)
-  setToggle(true)
+  setToggle(false)
   setUpdateItem(index)
 }
 
@@ -69,7 +61,7 @@ const updateTodos = (index) =>{
         <div className="body-part">
         <div className="input-bar my-3 flex w-full items-center gap-4 justify-between">
             <input onChange={handleChange} value={todo} type="text" className="w-full text-slate-400 text-lg border-2 px-2 py-1"  placeholder="Add todos here..."/>
-          { toggle ? <button onClick={addTodos} className="w-fit text-teal-600 border-2 px-3 py-2" > <FaEdit/>  </button> : <button onClick={addTodos} className="w-fit text-yellow-600 border-2 px-3 py-2" > <FaPlus/>  </button>}
+          { !toggle ? <button onClick={addTodos} className="w-fit text-teal-600 border-2 px-3 py-2" > <FaEdit/>  </button> : <button onClick={addTodos} className="w-fit text-yellow-600 border-2 px-3 py-2" > <FaPlus/>  </button>}
           </div>
           <div className="todo-items">
             <h1 className="uppercase text-center bg-teal-500 px-3 py-1 font-semibold">items list</h1>
